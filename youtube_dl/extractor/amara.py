@@ -24,7 +24,10 @@ class AmaraIE(InfoExtractor):
                         {'ext': 'vtt', 'url': 'https://amara.org/api/videos/jVx79ZKGK1ky/languages/en/subtitles/?format=vtt'},
                         {'ext': 'srt', 'url': 'https://amara.org/api/videos/jVx79ZKGK1ky/languages/en/subtitles/?format=srt'}
                     ]
-                }
+                },
+                'upload_date': '20160813',
+                'uploader': 'PBS NewsHour',
+                'uploader_id': 'PBSNewsHour'
             }
         },
         {
@@ -36,7 +39,11 @@ class AmaraIE(InfoExtractor):
                 'title': 'Native LinkedIn Video',
                 'description': 'Video made easy!',
                 'thumbnail': r're:^https?://.*\.jpg$',
-                'subtitles': {}
+                'subtitles': {},
+                'timestamp': 1555320305,
+                'upload_date': '20190415',
+                'uploader': 'Vormats',
+                'uploader_id': 'user85377268'
             }
         },
         {
@@ -245,7 +252,8 @@ class AmaraIE(InfoExtractor):
                         {'ext': 'vtt', 'url': 'https://amara.org/api/videos/s8KL7I3jLmh6/languages/my/subtitles/?format=vtt'},
                         {'ext': 'srt', 'url': 'https://amara.org/api/videos/s8KL7I3jLmh6/languages/my/subtitles/?format=srt'}
                     ]
-                }
+                },
+                'upload_date': '20131206'
             }
         }
     ]
@@ -280,11 +288,11 @@ class AmaraIE(InfoExtractor):
             ] + ie_info.get('subtitles', {}).get(language['code'], [])
         ], filter(lambda language: language['published'], meta.get('languages', [])))))
 
-        return {
-            'id': video_id,
-            'title': meta.get('title') or ie_info.get('title'),
-            'description': meta.get('description') or ie_info.get('description'),
-            'thumbnail': meta.get('thumbnail') or ie_info.get('thumbnail'),
-            'formats': ie_info.get('formats'),
-            'subtitles': subtitles
-        }
+        info = ie_info.copy()
+        info.update({ 'id': video_id, 'subtitles': subtitles })
+
+        if meta['title']: info.update({ 'title': meta['title' ]})
+        if meta['description']: info.update({ 'description': meta['description' ]})
+        if meta['thumbnail']: info.update({ 'thumbnail': meta['thumbnail' ]})
+
+        return info
